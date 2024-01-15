@@ -14,63 +14,30 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
--- CREATED		"Sat Jun 06 10:46:24 2020"
+-- CREATED		"Sun Sep 13 12:08:40 2020"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
 
 LIBRARY work;
 
-ENTITY mux4x1_8bit IS 
+ENTITY zero_detector IS 
 	PORT
 	(
-		SEL0 :  IN  STD_LOGIC;
-		SEL1 :  IN  STD_LOGIC;
 		A :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		B :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		C :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		D :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		Z :  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+		zero_det :  OUT  STD_LOGIC
 	);
-END mux4x1_8bit;
+END zero_detector;
 
-ARCHITECTURE bdf_type OF mux4x1_8bit IS 
+ARCHITECTURE bdf_type OF zero_detector IS 
 
-COMPONENT mux2x1_8bit
-	PORT(SEL : IN STD_LOGIC;
-		 A : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 B : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 Z : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
-	);
-END COMPONENT;
-
-SIGNAL	SYNTHESIZED_WIRE_0 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
-SIGNAL	SYNTHESIZED_WIRE_1 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
 
 
 BEGIN 
 
 
 
-b2v_inst : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => A,
-		 B => B,
-		 Z => SYNTHESIZED_WIRE_0);
-
-
-b2v_inst1 : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => C,
-		 B => D,
-		 Z => SYNTHESIZED_WIRE_1);
-
-
-b2v_inst2 : mux2x1_8bit
-PORT MAP(SEL => SEL1,
-		 A => SYNTHESIZED_WIRE_0,
-		 B => SYNTHESIZED_WIRE_1,
-		 Z => Z);
+zero_det <= NOT(A(7) OR A(5) OR A(6) OR A(4) OR A(2) OR A(3) OR A(1) OR A(0));
 
 
 END bdf_type;

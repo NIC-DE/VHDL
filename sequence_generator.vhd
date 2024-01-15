@@ -14,43 +14,86 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
--- CREATED		"Fri Sep 04 13:01:28 2020"
+-- CREATED		"Sat Sep 12 23:45:40 2020"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
 
 LIBRARY work;
 
-ENTITY D_flip_flop_CE_AC IS 
+ENTITY sequence_generator IS 
 	PORT
 	(
-		D :  IN  STD_LOGIC;
 		CLK :  IN  STD_LOGIC;
 		CE :  IN  STD_LOGIC;
 		CLR :  IN  STD_LOGIC;
-		Q :  OUT  STD_LOGIC
+		INCREMENT :  OUT  STD_LOGIC;
+		FETCH :  OUT  STD_LOGIC;
+		DECODE :  OUT  STD_LOGIC;
+		EXECUTE :  OUT  STD_LOGIC
 	);
-END D_flip_flop_CE_AC;
+END sequence_generator;
 
-ARCHITECTURE bdf_type OF D_flip_flop_CE_AC IS 
+ARCHITECTURE bdf_type OF sequence_generator IS 
+
+COMPONENT d_flip_flop_ce_ac
+	PORT(D : IN STD_LOGIC;
+		 CLK : IN STD_LOGIC;
+		 CE : IN STD_LOGIC;
+		 CLR : IN STD_LOGIC;
+		 Q : OUT STD_LOGIC
+	);
+END COMPONENT;
 
 SIGNAL	SYNTHESIZED_WIRE_0 :  STD_LOGIC;
+SIGNAL	SYNTHESIZED_WIRE_1 :  STD_LOGIC;
+SIGNAL	DFFE_inst1 :  STD_LOGIC;
+SIGNAL	SYNTHESIZED_WIRE_2 :  STD_LOGIC;
+SIGNAL	SYNTHESIZED_WIRE_3 :  STD_LOGIC;
 
 
 BEGIN 
+INCREMENT <= SYNTHESIZED_WIRE_1;
+FETCH <= DFFE_inst1;
+DECODE <= SYNTHESIZED_WIRE_2;
+EXECUTE <= SYNTHESIZED_WIRE_3;
 
 
 
 PROCESS(CLK,SYNTHESIZED_WIRE_0)
 BEGIN
 IF (SYNTHESIZED_WIRE_0 = '0') THEN
-	Q <= '0';
+	DFFE_inst1 <= '1';
 ELSIF (RISING_EDGE(CLK)) THEN
 	IF (CE = '1') THEN
-	Q <= D;
+	DFFE_inst1 <= SYNTHESIZED_WIRE_1;
 	END IF;
 END IF;
 END PROCESS;
+
+
+b2v_inst2 : d_flip_flop_ce_ac
+PORT MAP(D => DFFE_inst1,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => SYNTHESIZED_WIRE_2);
+
+
+b2v_inst3 : d_flip_flop_ce_ac
+PORT MAP(D => SYNTHESIZED_WIRE_2,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => SYNTHESIZED_WIRE_3);
+
+
+b2v_inst4 : d_flip_flop_ce_ac
+PORT MAP(D => SYNTHESIZED_WIRE_3,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => SYNTHESIZED_WIRE_1);
 
 
 SYNTHESIZED_WIRE_0 <= NOT(CLR);

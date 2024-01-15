@@ -14,63 +14,77 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
--- CREATED		"Sat Jun 06 10:46:24 2020"
+-- CREATED		"Fri Sep 04 14:19:31 2020"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
 
 LIBRARY work;
 
-ENTITY mux4x1_8bit IS 
+ENTITY register_4 IS 
 	PORT
 	(
-		SEL0 :  IN  STD_LOGIC;
-		SEL1 :  IN  STD_LOGIC;
-		A :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		B :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		C :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		D :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		Z :  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+		CLR :  IN  STD_LOGIC;
+		CE :  IN  STD_LOGIC;
+		CLK :  IN  STD_LOGIC;
+		D0 :  IN  STD_LOGIC;
+		D1 :  IN  STD_LOGIC;
+		D2 :  IN  STD_LOGIC;
+		D3 :  IN  STD_LOGIC;
+		Q0 :  OUT  STD_LOGIC;
+		Q1 :  OUT  STD_LOGIC;
+		Q2 :  OUT  STD_LOGIC;
+		Q3 :  OUT  STD_LOGIC
 	);
-END mux4x1_8bit;
+END register_4;
 
-ARCHITECTURE bdf_type OF mux4x1_8bit IS 
+ARCHITECTURE bdf_type OF register_4 IS 
 
-COMPONENT mux2x1_8bit
-	PORT(SEL : IN STD_LOGIC;
-		 A : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 B : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 Z : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+COMPONENT d_flip_flop_ce_ac
+	PORT(D : IN STD_LOGIC;
+		 CLK : IN STD_LOGIC;
+		 CE : IN STD_LOGIC;
+		 CLR : IN STD_LOGIC;
+		 Q : OUT STD_LOGIC
 	);
 END COMPONENT;
 
-SIGNAL	SYNTHESIZED_WIRE_0 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
-SIGNAL	SYNTHESIZED_WIRE_1 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
 
 
 BEGIN 
 
 
 
-b2v_inst : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => A,
-		 B => B,
-		 Z => SYNTHESIZED_WIRE_0);
+b2v_inst : d_flip_flop_ce_ac
+PORT MAP(D => D0,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => Q0);
 
 
-b2v_inst1 : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => C,
-		 B => D,
-		 Z => SYNTHESIZED_WIRE_1);
+b2v_inst2 : d_flip_flop_ce_ac
+PORT MAP(D => D1,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => Q1);
 
 
-b2v_inst2 : mux2x1_8bit
-PORT MAP(SEL => SEL1,
-		 A => SYNTHESIZED_WIRE_0,
-		 B => SYNTHESIZED_WIRE_1,
-		 Z => Z);
+b2v_inst3 : d_flip_flop_ce_ac
+PORT MAP(D => D2,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => Q2);
+
+
+b2v_inst4 : d_flip_flop_ce_ac
+PORT MAP(D => D3,
+		 CLK => CLK,
+		 CE => CE,
+		 CLR => CLR,
+		 Q => Q3);
 
 
 END bdf_type;

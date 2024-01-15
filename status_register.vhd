@@ -14,63 +14,63 @@
 
 -- PROGRAM		"Quartus Prime"
 -- VERSION		"Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition"
--- CREATED		"Sat Jun 06 10:46:24 2020"
+-- CREATED		"Sat Sep 12 21:08:47 2020"
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all; 
 
 LIBRARY work;
 
-ENTITY mux4x1_8bit IS 
+ENTITY status_register IS 
 	PORT
 	(
-		SEL0 :  IN  STD_LOGIC;
-		SEL1 :  IN  STD_LOGIC;
-		A :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		B :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		C :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		D :  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
-		Z :  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+		Carry :  IN  STD_LOGIC;
+		Zero :  IN  STD_LOGIC;
+		CLK :  IN  STD_LOGIC;
+		CLR :  IN  STD_LOGIC;
+		ADD :  IN  STD_LOGIC;
+		SUB :  IN  STD_LOGIC;
+		BITAND :  IN  STD_LOGIC;
+		CARRY_REG :  OUT  STD_LOGIC;
+		ZERO_REG :  OUT  STD_LOGIC
 	);
-END mux4x1_8bit;
+END status_register;
 
-ARCHITECTURE bdf_type OF mux4x1_8bit IS 
+ARCHITECTURE bdf_type OF status_register IS 
 
-COMPONENT mux2x1_8bit
-	PORT(SEL : IN STD_LOGIC;
-		 A : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 B : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-		 Z : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+COMPONENT d_flip_flop_ce_ac
+	PORT(D : IN STD_LOGIC;
+		 CLK : IN STD_LOGIC;
+		 CE : IN STD_LOGIC;
+		 CLR : IN STD_LOGIC;
+		 Q : OUT STD_LOGIC
 	);
 END COMPONENT;
 
-SIGNAL	SYNTHESIZED_WIRE_0 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
-SIGNAL	SYNTHESIZED_WIRE_1 :  STD_LOGIC_VECTOR(7 DOWNTO 0);
+SIGNAL	SYNTHESIZED_WIRE_2 :  STD_LOGIC;
 
 
 BEGIN 
 
 
 
-b2v_inst : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => A,
-		 B => B,
-		 Z => SYNTHESIZED_WIRE_0);
+b2v_inst : d_flip_flop_ce_ac
+PORT MAP(D => Carry,
+		 CLK => CLK,
+		 CE => SYNTHESIZED_WIRE_2,
+		 CLR => CLR,
+		 Q => CARRY_REG);
 
 
-b2v_inst1 : mux2x1_8bit
-PORT MAP(SEL => SEL0,
-		 A => C,
-		 B => D,
-		 Z => SYNTHESIZED_WIRE_1);
+b2v_inst1 : d_flip_flop_ce_ac
+PORT MAP(D => Zero,
+		 CLK => CLK,
+		 CE => SYNTHESIZED_WIRE_2,
+		 CLR => CLR,
+		 Q => ZERO_REG);
 
 
-b2v_inst2 : mux2x1_8bit
-PORT MAP(SEL => SEL1,
-		 A => SYNTHESIZED_WIRE_0,
-		 B => SYNTHESIZED_WIRE_1,
-		 Z => Z);
+SYNTHESIZED_WIRE_2 <= SUB OR BITAND OR ADD;
 
 
 END bdf_type;
