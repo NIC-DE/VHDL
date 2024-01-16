@@ -1,2 +1,3 @@
-# VHDL
-VHDL language  
+VHDL
+
+Plipsi/Plipsii    University of Patras
